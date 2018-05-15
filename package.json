@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "clean": "rm -rf ./built ./cache",
+    "compile": "tsc",
     "develop-watch": "npm run clean && concurrently \"tsc -w\" \"(sleep 5 && nodemon ./built/server/app.js)\""
   },
   "dependencies": {
@@ -23,7 +24,8 @@
     "@types/fs-extra": "5.0.2"
   },
   "devDependencies": {
-    "nodemon": "1.17.3"
+    "nodemon": "1.17.3",
+    "concurrently": "3.5.1"
   },
   "author": "",
   "license": "ISC"
