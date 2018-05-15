@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": false,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "types": ["node"],
+    "outDir": "./built"
+  },
+  "include": [
+    "server",
+    "storage"
+  ]
+}
