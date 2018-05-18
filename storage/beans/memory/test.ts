@@ -1,5 +1,4 @@
 import {Test as CachedTest} from "../cache/test";
-import {TEST_STATUS} from "../testStatus";
 import {Label} from "../label";
 import {Parameter} from "../parameter";
 import {Description} from "../description";
@@ -13,25 +12,40 @@ export class Test {
     public readonly start: number;
     public readonly stop: number;
     public readonly failure: any;
-    public readonly status: TEST_STATUS;
+    public readonly status: string;
     public readonly labels: Label[];
     public readonly parameters: Parameter[];
     public readonly description: Description;
     public readonly attachments: Attachment[];
     public readonly steps: Step[];
 
-    constructor(cachedTest: CachedTest) {
-        this.name = cachedTest.name;
-        this.start = cachedTest.start;
-        this.stop = cachedTest.stop;
-        this.failure = cachedTest.failure;
-        this.status = cachedTest.status;
-        this.labels = cachedTest.labels;
-        this.parameters = cachedTest.parameters;
-        this.description = cachedTest.description;
-        this.attachments = cachedTest.attachments
-            .map((cachedAttachment: CachedAttachment) => new Attachment(cachedAttachment));
-        this.steps = cachedTest.steps
-            .map((cachedStep: CachedStep) => new Step(cachedStep));
+    private constructor(name, start, stop, failure, status, labels, parameters, description, attachments, steps) {
+        this.name = name;
+        this.start = start;
+        this.stop = stop;
+        this.failure = failure;
+        this.status = status;
+        this.labels = labels;
+        this.parameters = parameters;
+        this.description = description;
+        this.attachments = attachments;
+        this.steps = steps;
+    }
+
+    static async wrap(cachedTest: CachedTest) {
+        const attachments = await Promise.all(cachedTest.attachments.map(async (cachedAttachment) => Attachment.wrap(cachedAttachment)));
+        const steps = await Promise.all(cachedTest.steps.map(async (cachedStep) => Step.wrap(cachedStep)));
+        return new Test(
+            cachedTest.name,
+            cachedTest.start,
+            cachedTest.stop,
+            cachedTest.failure,
+            cachedTest.status,
+            cachedTest.labels,
+            cachedTest.parameters,
+            cachedTest.description,
+            attachments,
+            steps
+        );
     }
 }

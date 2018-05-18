@@ -1,18 +1,15 @@
-import {Util} from "../../util";
-
-
 export class Attachment {
     public readonly title: string;
     public readonly mime: string;
+    public readonly size: number;
     public readonly fullFilePath: string;
-    public readonly fileName: string;
+    public readonly fileId: string;
 
-    constructor(title: string, buff: Buffer, mime: string) {
-        const info = Util.getBufferInfo(buff, mime);
+    constructor(title: string, filepath: string, mime: string, size: number, fileId: string) {
         this.title = title;
-        this.mime = mime ? mime : info.mime;
-        this.fullFilePath = Util.writeBuffer(buff, info.fileExtension);
-        this.fileName = this.fullFilePath.match(/\/([^\/]+)$/)[1];
+        this.fullFilePath = filepath;
+        this.mime = mime;
+        this.size = size;
+        this.fileId = fileId;
     }
-
 }

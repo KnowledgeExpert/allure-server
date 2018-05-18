@@ -2,14 +2,8 @@ export class Description {
     private readonly value;
     private readonly type;
 
-    constructor(value: string, type = DESCRIPTION_TYPE.TEXT) {
+    constructor(value: string, type: string) {
         this.value = value;
         this.type = type;
     }
-}
-
-export enum DESCRIPTION_TYPE {
-    'TEXT',
-    'HTML',
-    'MARKDOWN'
 }

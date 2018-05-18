@@ -1,97 +1,88 @@
-import {Suite} from "./suite";
-import {Attachment} from "./attachment";
-import {Test} from "./test";
-import {Step} from "./step";
-
-
-export class Session {
-    public readonly suites: Suite[] = [];
-
-    startSuite(suiteName: string, timestamp: number) {
-        this.suites.unshift(new Suite(suiteName, timestamp));
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const suite_1 = require("./suite");
+const attachment_1 = require("./attachment");
+const test_1 = require("./test");
+const step_1 = require("./step");
+class Session {
+    constructor() {
+        this.suites = [];
     }
-
-    endSuite(timestamp: number) {
+    startSuite(suiteName, timestamp) {
+        this.suites.unshift(new suite_1.Suite(suiteName, timestamp));
+    }
+    endSuite(timestamp) {
         const suite = this.getCurrentSuite();
         suite.end(timestamp);
     }
-
-    startCase(testName: string, timestamp: number) {
+    startCase(testName, timestamp) {
         const suite = this.getCurrentSuite();
         if (suite.currentTest) {
             throw new Error("");
         }
-
-        const test = new Test(testName, timestamp);
+        const test = new test_1.Test(testName, timestamp);
         suite.currentTest = test;
         suite.addTest(test);
     }
-
-    endCase(status: string, err: { message: string, stackTrace: string }, timestamp: number) {
+    endCase(status, err, timestamp) {
         this.getCurrentTest().end(status, err, timestamp);
         this.getCurrentSuite().currentTest = null;
     }
-
-    startStep(stepName: string, timestamp: number) {
+    startStep(stepName, timestamp) {
         const test = this.getCurrentTest();
-        const newStep = new Step(stepName, timestamp);
+        const newStep = new step_1.Step(stepName, timestamp);
         const currentStep = test.currentStep;
         if (currentStep) {
             currentStep.addStep(newStep);
             newStep.parent = currentStep;
             test.currentStep = newStep;
-        } else {
+        }
+        else {
             test.addStep(newStep);
             test.currentStep = newStep;
         }
     }
-
-    endStep(status: string, timestamp: number) {
+    endStep(status, timestamp) {
         const currentStep = this.getCurrentStep();
         const currentStepParent = currentStep.parent;
         currentStep.end(status, timestamp);
         this.getCurrentTest().currentStep = currentStepParent;
     }
-
-    setDescription(content: string, type: string) {
+    setDescription(content, type) {
         this.getCurrentTest().setDescription(content, type);
     }
-
-    addAttachment(title: string, filepath: string, mime: string, size: number, fileId: string) {
-        const attachment = new Attachment(title, filepath, mime, size, fileId);
+    addAttachment(title, filepath, mime, size, fileId) {
+        const attachment = new attachment_1.Attachment(title, filepath, mime, size, fileId);
         const test = this.getCurrentTest();
         if (test.currentStep) {
             test.currentStep.addAttachment(attachment);
-        } else {
+        }
+        else {
             test.addAttachment(attachment);
         }
     }
-
-    addLabel(name: string, value: string) {
+    addLabel(name, value) {
         this.getCurrentTest().addLabel(name, value);
     }
-
-    addParameter(kind: string, name: string, value: string) {
+    addParameter(kind, name, value) {
         this.getCurrentTest().addParameter(kind, name, value);
-    };
-
-    private getCurrentSuite() {
+    }
+    ;
+    getCurrentSuite() {
         const suite = this.suites[0];
         if (!suite) {
             throw new Error('No started suite');
         }
         return suite;
     }
-
-    private getCurrentTest() {
+    getCurrentTest() {
         const test = this.getCurrentSuite().currentTest;
         if (!test) {
             throw new Error('No started test');
         }
         return test;
     }
-
-    private getCurrentStep() {
+    getCurrentStep() {
         const step = this.getCurrentTest().currentStep;
         if (!step) {
             throw new Error('No started step');
@@ -99,3 +90,5 @@ export class Session {
         return step;
     }
 }
+exports.Session = Session;
+//# sourceMappingURL=session.js.map

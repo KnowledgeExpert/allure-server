@@ -1,7 +1,6 @@
 import {Attachment} from "./attachment";
 import {Step} from "./step";
-import {Description, DESCRIPTION_TYPE} from "../description";
-import {TEST_STATUS} from "../testStatus";
+import {Description} from "../description";
 import {Label} from "../label";
 import {Parameter} from "../parameter";
 
@@ -12,7 +11,7 @@ export class Test {
     public readonly start: number;
     public stop: number;
     public failure: any;
-    public status: TEST_STATUS;
+    public status: string;
     public readonly steps: Step[] = [];
     public readonly labels: Label[] = [];
     public readonly attachments: Attachment[] = [];
@@ -32,7 +31,7 @@ export class Test {
         this.parameters = [];
     }
 
-    setDescription(content: string, type: DESCRIPTION_TYPE) {
+    setDescription(content: string, type: string) {
         this.description = new Description(content, type);
     }
 
@@ -52,7 +51,7 @@ export class Test {
         this.attachments.push(attachment);
     };
 
-    end(status: TEST_STATUS, error: { message: string, stackTrace: string }, timestamp = Date.now()) {
+    end(status: string, error: { message: string, stackTrace: string }, timestamp = Date.now()) {
         this.stop = timestamp;
         this.status = !this.status ? status : this.status;
         this.failure = error ? {message: error.message, 'stack-trace': error.stackTrace} : this.failure;

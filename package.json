@@ -1,27 +1,23 @@
 {
-  "name": "allure-http-server",
+  "name": "allure-server",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "clean": "rm -rf ./built ./cache",
     "compile": "tsc",
+    "build": "npm run clean && npm run compile",
+    "start": "npm run clean && npm run compile && node ./built/server/app.js",
     "develop-watch": "npm run clean && concurrently \"tsc -w\" \"(sleep 5 && nodemon ./built/server/app.js)\""
   },
   "dependencies": {
-    "typescript": "2.8.3",
-    "express": "4.16.3",
-    "body-parser": "1.18.2",
     "@types/body-parser": "1.17.0",
     "@types/express": "4.11.1",
     "@types/node": "9.6.6",
-    "uuid": "3.2.1",
     "@types/uuid": "3.4.3",
-    "file-type": "7.7.1",
-    "@types/file-type": "5.2.1",
-    "mime": "2.3.1",
-    "@types/mime": "2.0.0",
-    "fs-extra": "6.0.0",
-    "@types/fs-extra": "5.0.2"
+    "body-parser": "1.18.2",
+    "express": "4.16.3",
+    "typescript": "2.8.3",
+    "uuid": "3.2.1"
   },
   "devDependencies": {
     "nodemon": "1.17.3",

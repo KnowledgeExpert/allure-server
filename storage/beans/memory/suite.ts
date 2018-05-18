@@ -7,10 +7,20 @@ export class Suite {
     public readonly stop: number;
     public readonly tests: Test[] = [];
 
-    constructor(cachedSuite: CachedSuite) {
-        this.name = cachedSuite.name;
-        this.start = cachedSuite.start;
-        this.stop = cachedSuite.stop;
-        this.tests = cachedSuite.tests.map(cachedTest => new Test(cachedTest));
+    private constructor(name, start, stop, tests) {
+        this.name = name;
+        this.start = start;
+        this.stop = stop;
+        this.tests = tests;
+    }
+
+    static async wrap(cachedSuite: CachedSuite) {
+        const tests = await Promise.all(cachedSuite.tests.map(async (cachedTest) => Test.wrap(cachedTest)));
+        return new Suite(
+            cachedSuite.name,
+            cachedSuite.start,
+            cachedSuite.stop,
+            tests
+        );
     }
 }

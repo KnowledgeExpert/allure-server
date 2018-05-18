@@ -1,23 +1,32 @@
-import {Attachment as CachedAttachment} from "../cache/attachment";
 import {Step as CachedStep} from "../cache/step";
 import {Attachment} from "./attachment";
-import {STEP_STATUS} from "../stepStatus";
 
 
 export class Step {
     private readonly name: string;
-    private readonly status: STEP_STATUS;
+    private readonly status: string;
     private readonly start: number;
     private readonly stop: number;
     public readonly attachments: Attachment[] = [];
     public readonly innerSteps: Step[] = [];
 
-    constructor(cachedStep: CachedStep) {
-        this.name = cachedStep.name;
-        this.status = cachedStep.status;
-        this.start = cachedStep.start;
-        this.stop = cachedStep.stop;
-        this.attachments = cachedStep.attachments.map((cachedAttachment: CachedAttachment) => new Attachment(cachedAttachment));
-        this.innerSteps = cachedStep.innerSteps.map(cachedStep => new Step(cachedStep));
+    constructor(name, status, start, stop, attachments, innerSteps) {
+        this.name = name;
+        this.status = status;
+        this.start = start;
+        this.stop = stop;
+        this.attachments = attachments;
+        this.innerSteps = innerSteps;
+    }
+
+    static async wrap(cachedStep: CachedStep) {
+        return new Step(
+            cachedStep.name,
+            cachedStep.status,
+            cachedStep.start,
+            cachedStep.stop,
+            await Promise.all(cachedStep.attachments.map(async (cachedAttachment) => await Attachment.wrap(cachedAttachment))),
+            await Promise.all(cachedStep.innerSteps.map(async (cachedStep) => await Step.wrap(cachedStep)))
+        );
     }
 }

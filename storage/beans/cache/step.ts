@@ -1,10 +1,9 @@
 import {Attachment} from "./attachment";
-import {STEP_STATUS} from "../stepStatus";
 
 
 export class Step {
     public readonly name: string;
-    public status: STEP_STATUS;
+    public status: string;
     public readonly start: number;
     public stop: number;
     public readonly innerSteps: Step[] = [];
@@ -27,7 +26,7 @@ export class Step {
         this.attachments.push(attachment);
     }
 
-    end(status: STEP_STATUS, timestamp = Date.now()) {
+    end(status: string, timestamp = Date.now()) {
         this.status = status;
         this.stop = timestamp;
     }

@@ -1,114 +1,111 @@
-import {Session as CachedSession} from "./beans/cache/session";
-import {Session as MemorySession} from "./beans/memory/session";
-
-
-export namespace Storage {
-
-    const sessionsMap: { [uuid: string]: CachedSession } = {};
-
-    export function deleteSession(uuid?: string) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const session_1 = require("./beans/cache/session");
+const session_2 = require("./beans/memory/session");
+var Storage;
+(function (Storage) {
+    const sessionsMap = {};
+    function deleteSession(uuid) {
         assertTruthy('Uuid', uuid);
         if (sessionsMap[uuid]) {
             delete sessionsMap[uuid];
-        } else {
+        }
+        else {
             throw new Error(`No session with uuid '${uuid}'`);
         }
     }
-
-    export async function popData(uuid: string): Promise<string> {
+    Storage.deleteSession = deleteSession;
+    async function popData(uuid) {
         assertTruthy('Uuid', uuid);
         const rawSessionData = sessionsMap[uuid];
-        if (!rawSessionData) throw new Error(`No data present with id ${uuid}`);
-
+        if (!rawSessionData)
+            throw new Error(`No data present with id ${uuid}`);
         const inMemorySessionData = await transformCachedData(rawSessionData);
         const result = toJson(inMemorySessionData);
-
         deleteSession(uuid);
         return result;
     }
-
-    export function startSuite(uuid: string, name: string, timestamp: string) {
+    Storage.popData = popData;
+    function startSuite(uuid, name, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Timestamp', timestamp);
         assertTruthy('Suite name', name);
         ensurePresent(uuid);
         getSession(uuid).startSuite(name, parseInt(timestamp));
     }
-
-    export function endSuite(uuid: string, timestamp: string) {
+    Storage.startSuite = startSuite;
+    function endSuite(uuid, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Timestamp', timestamp);
         getSession(uuid).endSuite(parseInt(timestamp));
     }
-
-    export function startTest(uuid: string, name: string, timestamp: string) {
+    Storage.endSuite = endSuite;
+    function startTest(uuid, name, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Test name', name);
         assertTruthy('Timestamp', timestamp);
         getSession(uuid).startCase(name, parseInt(timestamp));
     }
-
-    export function endTest(uuid: string, status: string, rawError: string, timestamp: string) {
+    Storage.startTest = startTest;
+    function endTest(uuid, status, rawError, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Status', status);
         assertTruthy('Timestamp', timestamp);
         const error = rawError ? JSON.parse(rawError) : null;
         getSession(uuid).endCase(status, error, parseInt(timestamp));
     }
-
-    export function startStep(uuid: string, name: string, timestamp: string) {
+    Storage.endTest = endTest;
+    function startStep(uuid, name, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Step name', name);
         assertTruthy('Timestamp', timestamp);
         getSession(uuid).startStep(name, parseInt(timestamp));
     }
-
-    export function endStep(uuid: string, status: string, timestamp: string) {
+    Storage.startStep = startStep;
+    function endStep(uuid, status, timestamp) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Status', status);
         assertTruthy('Timestamp', timestamp);
         getSession(uuid).endStep(status, parseInt(timestamp));
     }
-
-    export function addDescription(uuid: string, content: string, type: string) {
+    Storage.endStep = endStep;
+    function addDescription(uuid, content, type) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Content', content);
         assertTruthy('Type', type);
         getSession(uuid).setDescription(content, type);
     }
-
-    export function addAttachment(uuid: string, title: string, filepath: string, mime: string, size: number, fileId: string) {
+    Storage.addDescription = addDescription;
+    function addAttachment(uuid, title, filepath, mime, size, fileId) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Title', title);
         getSession(uuid).addAttachment(title, filepath, mime, size, fileId);
     }
-
-    export function addLabel(uuid: string, name: string, value: string) {
+    Storage.addAttachment = addAttachment;
+    function addLabel(uuid, name, value) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Name', name);
         assertTruthy('Value', value);
         getSession(uuid).addLabel(name, value);
     }
-
-    export function addParameter(uuid: string, kind: string, name: string, value: string) {
+    Storage.addLabel = addLabel;
+    function addParameter(uuid, kind, name, value) {
         assertTruthy('Uuid', uuid);
         assertTruthy('Kind', kind);
         assertTruthy('Name', name);
         assertTruthy('Value', value);
         getSession(uuid).addParameter(kind, name, value);
     }
-
-    function assertTruthy(name: string, value: any) {
+    Storage.addParameter = addParameter;
+    function assertTruthy(name, value) {
         if (!value) {
             throw new Error(`${name} should be truthy, but was '${value}'`);
         }
     }
-
-    async function transformCachedData(cachedSession: CachedSession) {
-        return await MemorySession.wrap(cachedSession);
+    async function transformCachedData(cachedSession) {
+        return await session_2.Session.wrap(cachedSession);
     }
-
-    function toJson(object: any): string {
+    function toJson(object) {
         const cache = [];
         const removeCircularReferences = (key, value) => {
             if (typeof value === 'object' && value !== null) {
@@ -123,12 +120,11 @@ export namespace Storage {
         };
         return JSON.stringify(object, removeCircularReferences);
     }
-
-    function ensurePresent(uuid: string) {
-        sessionsMap[uuid] = sessionsMap[uuid] ? sessionsMap[uuid] : new CachedSession();
+    function ensurePresent(uuid) {
+        sessionsMap[uuid] = sessionsMap[uuid] ? sessionsMap[uuid] : new session_1.Session();
     }
-
-    function getSession(uuid: string) {
+    function getSession(uuid) {
         return sessionsMap[uuid];
     }
-}
+})(Storage = exports.Storage || (exports.Storage = {}));
+//# sourceMappingURL=index.js.map
