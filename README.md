@@ -4,6 +4,7 @@ This module is an http storage for an Allure reporter entities (Suite, Test, Ste
 
 ## Usage
 Accumulating test artifacts in runtime, for processing afterwards.
+Better to use lang wrappers like [allure-client](https://github.com/KnowledgeExpert/allure-client) for NodeJS.
 
 ## Use Case
 Using for FAAS testing.
