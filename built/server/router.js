@@ -89,16 +89,6 @@ exports.router = function (app) {
     });
     app.post("/attachment", upload.single('attachment'), async (request, response) => {
         await returnJson(response, () => {
-            // console.log('===============================');
-            // console.log('------headers------');
-            // console.log(request.headers);
-            // console.log('---------body--------');
-            // console.log(request.body);
-            // console.log('-------file------');
-            // console.log(request.file);
-            // console.log('-------files------');
-            // console.log(request.files);
-            // console.log('===============================');
             const uuid = request.body.uuid;
             const title = request.body.title;
             const path = p.resolve(configuration_1.Configuration.cacheDir, request.file.filename);
