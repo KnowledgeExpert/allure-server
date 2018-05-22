@@ -2,12 +2,16 @@
 
 This module is an http storage for an Allure reporter entities (Suite, Test, Step, etc.).
 
-## Usage
+## Usage and Use Case
+
 Accumulating test artifacts in runtime, for processing afterwards.
 Better to use lang wrappers like [allure-client](https://github.com/KnowledgeExpert/allure-client) for NodeJS.
 
-## Use Case
-Using for FAAS testing.
+Using function-as-a-service approach with allure-server can be helpful for paralleling JavaScript long UI tests.
+
+Since FAAS cant store any kind of 'state' which are required for testing it collects in runtime some test data (test-suites, test-cases, attachments, etc.) so some external test data 'collector' can be used.
+
+Idea is that in FAAS you collect test data in allure-server, and after all tests are finished, you pop this data from collector and generate an allure report using allure-cli locally as usual.
 
 
 ## API
