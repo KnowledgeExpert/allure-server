@@ -24,6 +24,13 @@ exports.router = function (app) {
             return await _1.Storage.popData(uuid);
         });
     });
+    app.get("/data", async (request, response) => {
+        await returnJson(response, async () => {
+            const uuid = request.query.uuid;
+            console.log('get /popdata', uuid);
+            return await _1.Storage.getData(uuid);
+        });
+    });
     app.post("/startsuite", async (request, response) => {
         await returnJson(response, () => {
             const uuid = request.body.uuid;

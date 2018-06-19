@@ -10,8 +10,8 @@ export class Session {
         this.suites = suites;
     }
 
-    static async wrap(cachedSession: CachedAllureSession) {
-        const suites = await Promise.all(cachedSession.suites.map(async (cachedSuite: CachedSuite) => await Suite.wrap(cachedSuite)));
+    static async wrap(cachedSession: CachedAllureSession, popdata: boolean) {
+        const suites = await Promise.all(cachedSession.suites.map(async (cachedSuite: CachedSuite) => await Suite.wrap(cachedSuite, popdata)));
         return new Session(suites);
     }
 }

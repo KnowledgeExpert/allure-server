@@ -15,15 +15,20 @@ var Storage;
         }
     }
     Storage.deleteSession = deleteSession;
-    async function popData(uuid) {
+    async function getData(uuid) {
         assertTruthy('Uuid', uuid);
         const rawSessionData = sessionsMap[uuid];
         if (!rawSessionData)
             throw new Error(`No data present with id ${uuid}`);
-        const inMemorySessionData = await transformCachedData(rawSessionData);
+        const inMemorySessionData = await transformCachedData(rawSessionData, false);
         const result = toJson(inMemorySessionData);
-        deleteSession(uuid);
         return result;
+    }
+    Storage.getData = getData;
+    async function popData(uuid) {
+        const json = getData(uuid);
+        deleteSession(uuid);
+        return json;
     }
     Storage.popData = popData;
     function startSuite(uuid, name, timestamp) {
@@ -102,8 +107,8 @@ var Storage;
             throw new Error(`${name} should be truthy, but was '${value}'`);
         }
     }
-    async function transformCachedData(cachedSession) {
-        return await session_2.Session.wrap(cachedSession);
+    async function transformCachedData(cachedSession, popdata) {
+        return await session_2.Session.wrap(cachedSession, popdata);
     }
     function toJson(object) {
         const cache = [];

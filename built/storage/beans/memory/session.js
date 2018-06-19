@@ -5,8 +5,8 @@ class Session {
     constructor(suites) {
         this.suites = suites;
     }
-    static async wrap(cachedSession) {
-        const suites = await Promise.all(cachedSession.suites.map(async (cachedSuite) => await suite_1.Suite.wrap(cachedSuite)));
+    static async wrap(cachedSession, popdata) {
+        const suites = await Promise.all(cachedSession.suites.map(async (cachedSuite) => await suite_1.Suite.wrap(cachedSuite, popdata)));
         return new Session(suites);
     }
 }

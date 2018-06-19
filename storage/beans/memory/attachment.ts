@@ -16,9 +16,9 @@ export class Attachment {
         this.buffer = buffer;
     }
 
-    static async wrap(cachedAttachment: CachedAttachment) {
+    static async wrap(cachedAttachment: CachedAttachment, popdata: boolean) {
         const buff = await Attachment.getBuffer(cachedAttachment.fullFilePath);
-        await Attachment.unlink(cachedAttachment.fullFilePath);
+        if (popdata) await Attachment.unlink(cachedAttachment.fullFilePath);
         return new Attachment(
             cachedAttachment.title,
             cachedAttachment.mime,

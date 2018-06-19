@@ -9,8 +9,8 @@ class Suite {
         this.stop = stop;
         this.tests = tests;
     }
-    static async wrap(cachedSuite) {
-        const tests = await Promise.all(cachedSuite.tests.map(async (cachedTest) => test_1.Test.wrap(cachedTest)));
+    static async wrap(cachedSuite, popdata) {
+        const tests = await Promise.all(cachedSuite.tests.map(async (cachedTest) => test_1.Test.wrap(cachedTest, popdata)));
         return new Suite(cachedSuite.name, cachedSuite.start, cachedSuite.stop, tests);
     }
 }

@@ -19,14 +19,14 @@ export class Step {
         this.innerSteps = innerSteps;
     }
 
-    static async wrap(cachedStep: CachedStep) {
+    static async wrap(cachedStep: CachedStep, popdata) {
         return new Step(
             cachedStep.name,
             cachedStep.status,
             cachedStep.start,
             cachedStep.stop,
-            await Promise.all(cachedStep.attachments.map(async (cachedAttachment) => await Attachment.wrap(cachedAttachment))),
-            await Promise.all(cachedStep.innerSteps.map(async (cachedStep) => await Step.wrap(cachedStep)))
+            await Promise.all(cachedStep.attachments.map(async (cachedAttachment) => await Attachment.wrap(cachedAttachment, popdata))),
+            await Promise.all(cachedStep.innerSteps.map(async (cachedStep) => await Step.wrap(cachedStep, popdata)))
         );
     }
 }

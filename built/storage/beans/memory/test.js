@@ -15,9 +15,9 @@ class Test {
         this.attachments = attachments;
         this.steps = steps;
     }
-    static async wrap(cachedTest) {
-        const attachments = await Promise.all(cachedTest.attachments.map(async (cachedAttachment) => attachment_1.Attachment.wrap(cachedAttachment)));
-        const steps = await Promise.all(cachedTest.steps.map(async (cachedStep) => step_1.Step.wrap(cachedStep)));
+    static async wrap(cachedTest, popdata) {
+        const attachments = await Promise.all(cachedTest.attachments.map(async (cachedAttachment) => attachment_1.Attachment.wrap(cachedAttachment, popdata)));
+        const steps = await Promise.all(cachedTest.steps.map(async (cachedStep) => step_1.Step.wrap(cachedStep, popdata)));
         return new Test(cachedTest.name, cachedTest.start, cachedTest.stop, cachedTest.failure, cachedTest.status, cachedTest.labels, cachedTest.parameters, cachedTest.description, attachments, steps);
     }
 }

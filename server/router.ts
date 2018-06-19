@@ -28,6 +28,14 @@ export const router = function (app) {
         });
     });
 
+    app.get("/data", async (request, response) => {
+        await returnJson(response, async () => {
+            const uuid = request.query.uuid;
+            console.log('get /popdata', uuid);
+            return await Storage.getData(uuid);
+        });
+    });
+
     app.post("/startsuite", async (request, response) => {
         await returnJson(response, () => {
             const uuid: string = request.body.uuid;

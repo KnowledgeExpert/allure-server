@@ -14,8 +14,8 @@ export class Suite {
         this.tests = tests;
     }
 
-    static async wrap(cachedSuite: CachedSuite) {
-        const tests = await Promise.all(cachedSuite.tests.map(async (cachedTest) => Test.wrap(cachedTest)));
+    static async wrap(cachedSuite: CachedSuite, popdata: boolean) {
+        const tests = await Promise.all(cachedSuite.tests.map(async (cachedTest) => Test.wrap(cachedTest, popdata)));
         return new Suite(
             cachedSuite.name,
             cachedSuite.start,

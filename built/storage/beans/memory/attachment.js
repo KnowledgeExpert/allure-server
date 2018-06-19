@@ -9,9 +9,10 @@ class Attachment {
         this.size = size;
         this.buffer = buffer;
     }
-    static async wrap(cachedAttachment) {
+    static async wrap(cachedAttachment, popdata) {
         const buff = await Attachment.getBuffer(cachedAttachment.fullFilePath);
-        await Attachment.unlink(cachedAttachment.fullFilePath);
+        if (popdata)
+            await Attachment.unlink(cachedAttachment.fullFilePath);
         return new Attachment(cachedAttachment.title, cachedAttachment.mime, cachedAttachment.fileId, cachedAttachment.size, buff);
     }
     static async getBuffer(path) {

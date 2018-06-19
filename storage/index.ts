@@ -15,16 +15,21 @@ export namespace Storage {
         }
     }
 
-    export async function popData(uuid: string): Promise<string> {
+    export async function getData(uuid: string): Promise<string> {
         assertTruthy('Uuid', uuid);
         const rawSessionData = sessionsMap[uuid];
         if (!rawSessionData) throw new Error(`No data present with id ${uuid}`);
 
-        const inMemorySessionData = await transformCachedData(rawSessionData);
+        const inMemorySessionData = await transformCachedData(rawSessionData, false);
         const result = toJson(inMemorySessionData);
 
-        deleteSession(uuid);
         return result;
+    }
+
+    export async function popData(uuid: string): Promise<string> {
+        const json = getData(uuid);
+        deleteSession(uuid);
+        return json;
     }
 
     export function startSuite(uuid: string, name: string, timestamp: string) {
@@ -104,8 +109,8 @@ export namespace Storage {
         }
     }
 
-    async function transformCachedData(cachedSession: CachedSession) {
-        return await MemorySession.wrap(cachedSession);
+    async function transformCachedData(cachedSession: CachedSession, popdata: boolean) {
+        return await MemorySession.wrap(cachedSession, popdata);
     }
 
     function toJson(object: any): string {

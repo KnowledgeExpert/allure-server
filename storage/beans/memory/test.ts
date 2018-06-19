@@ -32,9 +32,9 @@ export class Test {
         this.steps = steps;
     }
 
-    static async wrap(cachedTest: CachedTest) {
-        const attachments = await Promise.all(cachedTest.attachments.map(async (cachedAttachment) => Attachment.wrap(cachedAttachment)));
-        const steps = await Promise.all(cachedTest.steps.map(async (cachedStep) => Step.wrap(cachedStep)));
+    static async wrap(cachedTest: CachedTest, popdata: boolean) {
+        const attachments = await Promise.all(cachedTest.attachments.map(async (cachedAttachment) => Attachment.wrap(cachedAttachment, popdata)));
+        const steps = await Promise.all(cachedTest.steps.map(async (cachedStep) => Step.wrap(cachedStep, popdata)));
         return new Test(
             cachedTest.name,
             cachedTest.start,
