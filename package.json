@@ -7,6 +7,7 @@
     "compile": "tsc",
     "build": "npm run clean && npm run compile",
     "start": "npm run clean && npm run compile && node ./built/server/app.js",
+    "watch": "nodemon ./built/server/app.js",
     "develop-watch": "npm run clean && concurrently \"tsc -w\" \"(sleep 5 && nodemon ./built/server/app.js)\""
   },
   "dependencies": {
